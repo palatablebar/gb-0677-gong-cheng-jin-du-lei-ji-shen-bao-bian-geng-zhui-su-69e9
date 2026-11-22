@@ -30,6 +30,11 @@
 | TRAP-07 | 累计量空值 | 按零冲回 | 隔离缺失 | `app/values.py` | `tests/test_m2.py::test_real_null_not_zero` |
 | TRAP-10 | 分币舍入 | 浮点误差 | 分项量化后净额守恒 | `app/modules/m5_deductions/rules.py` | `tests/test_m5.py::test_fraction_rounds_to_cent` |
 | TRAP-23 | 变更生效边界 | 旧价覆盖 | 按周期选择已批版本 | `app/modules/m3_changes/rules.py` | `tests/test_m3.py::test_effective_boundary` |
+| TRAP-31 | 新版新增当累计 | 累计跳高或骤降 | 承接基线+新增-冲回，来源版本留痕 | `app/modules/m4_increment/rules.py` | `tests/test_carryover.py::test_increment_not_misread_as_cumulative` |
+| TRAP-32 | 基线不可恢复 | 伪造零基线入账 | BASELINE_MISSING隔离，不出承接结果 | `app/modules/m4_increment/rules.py` | `tests/test_carryover.py::test_baseline_missing_isolated_not_fabricated` |
+| TRAP-33 | 新版文件重试 | 新增量重复计量 | 摘要幂等同批次+同周期去重 | `app/pipeline.py` `app/store.py` | `tests/test_carryover.py::test_same_new_file_retry_not_double_counted` |
+| TRAP-34 | 切换失败改签证 | 历史签证被覆盖 | 入库前抛错，批次追加不改写 | `app/pipeline.py` `app/store.py` | `tests/test_carryover.py::test_switch_failure_keeps_original_visa` |
+| TRAP-35 | 新旧表混排 | 整批拒收或错列 | 分段表头切换版本，逐行标记 | `app/modules/m1_claims/rules.py` | `tests/test_carryover.py::test_mixed_sections_switched_and_tagged` |
 
 ## 对账规则
 

@@ -25,6 +25,8 @@ docker compose exec -T app pytest -q
 
 累计申报必须减前期已审金额，变更按审批生效版本覆盖；负进度需关联冲回证据。
 
+新版申报表（increment_qty/reversal_qty）与旧版累计表（cumulative_qty/previous_qty）可拼接为同一批：分段表头切换格式，每行带来源版本。新版行按旧基线+本期新增-冲回承接累计，基线只取自同批已采纳上一周期、previous_revisions参数或旧版前审量并记录来源；基线不可恢复的行隔离不伪造。同一文件重跑幂等不重复计量，切换失败整批不入库、原签证保留。
+
 ## 演示
 
 1. 打开首页，核对当次计算、差异和隔离原因。
@@ -34,7 +36,7 @@ docker compose exec -T app pytest -q
 
 ## 输入与输出
 
-输入列见 `docs/DATA-DICTIONARY.md`。项目包含dirty.csv、clean.csv、legacy.csv，统一走实际导入路径。上传限制4MB，拒绝不带时区的时间。业务键按字符串保留，Decimal参与计算，空值不会当零。
+输入列见 `docs/DATA-DICTIONARY.md`。项目包含dirty.csv、clean.csv、legacy.csv、mixed.csv（新旧版合并批），统一走实际导入路径。上传限制4MB，拒绝不带时区的时间。业务键按字符串保留，Decimal参与计算，空值不会当零。
 
 `POST /api/runs` 接收sample或csv；`GET /api/runs`返回历史批次；`POST /api/runs/<id>/review`需要version与decision；`GET /api/runs/<id>/archive`返回唯一证据导出。
 
